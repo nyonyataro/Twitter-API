@@ -115,8 +115,8 @@ api = create_api(os.getenv('API_KEY'), os.getenv(
 
 if __name__ == '__main__':
     selected_tweets, selected_users = select_blog_starter(api)
-    # for selected_tweet in selected_tweets:
-    #     favorite_tweet(selected_tweet)
+    for selected_tweet in selected_tweets:
+        favorite_tweet(selected_tweet)
     for selected_user in selected_users:
         follow_user(selected_user)
 
