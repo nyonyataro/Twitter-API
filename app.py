@@ -3,8 +3,9 @@ import random
 import time
 import os
 import datetime
-from spreadsheet import append_users, judge_user_existence
 from dotenv import load_dotenv
+
+from spreadsheet import return_unfollow_ids
 load_dotenv()
 
 influencer_id_list = ["@takapon_jp", "@hirox246", "@ochyai"]  # ホリエモン、ひろゆき、落合陽一
@@ -98,26 +99,36 @@ def follow_user(user):
         api.create_friendship(user_id=user.id)
         print(f'{user.screen_name}をフォローしました')
         today = datetime.datetime.now().strftime('%Y-%m-%d')
-        append_users([selected_user.screen_name, today])
-    # try:   
-    #     api.create_friendship(user_id=user.id)
-    #     print(f'{user.screen_name}をフォローしました')
-    #     already_follow = False
-    #     return already_follow
-    # except:
-    #     print(f'既に{user.screen_name}をフォロー済みです')
-    #     already_follow = True
-    #     return already_follow
+        print(selected_user.id)
+        append_users([selected_user.screen_name, str(selected_user.id), today])
 
 #API認証
 api = create_api(os.getenv('API_KEY'), os.getenv(
     'API_SECRET'), os.getenv('ACCESS_TOKEN'), os.getenv('ACCESS_SECRET'))
 
+follower_id = api.get_follower_ids()
+
 if __name__ == '__main__':
+    from spreadsheet import append_users, judge_user_existence, check_am_i_followed
+
     selected_tweets, selected_users = select_blog_starter(api)
     for selected_tweet in selected_tweets:
         favorite_tweet(selected_tweet)
     for selected_user in selected_users:
         follow_user(selected_user)
+    
+    kataomoi_ids = check_am_i_followed()
+
+    #フォロー返さない人へのフォローを外す
+    unfollow_ids = return_unfollow_ids()
+    for unfollow_id in unfollow_ids:
+        api.destroy_friendship(unfollow_id)
+    
+    #片思いの人の最新ツイートをいいねする
+    for kataomoi_id in kataomoi_ids:
+        top_tweet = api.user_timeline(id=kataomoi_id)[0]
+        favorite_tweet(top_tweet)
+    
+
 
 #今後はスプシからフォローを返さない人をリムーブする
