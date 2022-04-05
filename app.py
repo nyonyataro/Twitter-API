@@ -4,8 +4,6 @@ import time
 import os
 import datetime
 from dotenv import load_dotenv
-
-from spreadsheet import return_unfollow_ids
 load_dotenv()
 
 influencer_id_list = ["@takapon_jp", "@hirox246", "@ochyai"]  # ホリエモン、ひろゆき、落合陽一
@@ -109,7 +107,7 @@ api = create_api(os.getenv('API_KEY'), os.getenv(
 follower_id = api.get_follower_ids()
 
 if __name__ == '__main__':
-    from spreadsheet import append_users, judge_user_existence, check_am_i_followed
+    from spreadsheet import append_users, judge_user_existence, check_am_i_followed, return_unfollow_ids
 
     selected_tweets, selected_users = select_blog_starter(api)
     for selected_tweet in selected_tweets:

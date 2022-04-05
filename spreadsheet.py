@@ -34,7 +34,10 @@ def check_am_i_followed():
 
     i = 0
     while ws.cell(i+2,2).value:
-        if ws.cell(i+2, 2) in kataomoi_ids:
+        id_cell = int(ws.cell(i+2, 2).value)
+        if id_cell == '○':
+            pass
+        elif id_cell in follower_id:
             ws.update_cell(i+2, 4, "○")
         else:
             ws.update_cell(i+2, 4, "×")
