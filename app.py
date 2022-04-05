@@ -42,7 +42,7 @@ def get_anhour_before():
 
 def select_blog_starter(api):
     day, anhour_before = get_anhour_before()
-    query = f'#ブログ初心者 since:{day}_{anhour_before}_JST'
+    query = f'#ブログ初心者 -filter:links since:{day}_{anhour_before}_JST'
     print(f'検索ワード:{query}')
     tweets = api.search_tweets(q=query, lang='ja', count=20)
     selected_users = []
@@ -55,7 +55,7 @@ def select_blog_starter(api):
         friends = user.friends_count
         ff_ratio = friends/followers
         #ツイートのいいねの数
-        if tweet.favorite_count >= 10:
+        if tweet.favorite_count >= 5:
             print('-----------------')    
             print('ツイートについているいいねが多い')
             continue
