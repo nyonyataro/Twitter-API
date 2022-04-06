@@ -51,7 +51,11 @@ def select_blog_starter(api):
         user = api.get_user(user_id=user_id)
         followers = user.followers_count
         friends = user.friends_count
-        ff_ratio = friends/followers
+        try:
+            ff_ratio = friends/followers
+        except:
+            ff_ratio = 0
+            print('ff比が算出できませんでした')
         #ツイートのいいねの数
         if tweet.favorite_count >= 5:
             print('-----------------')    
@@ -98,7 +102,7 @@ def follow_user(user):
         print(f'{user.screen_name}をフォローしました')
         today = datetime.datetime.now().strftime('%Y-%m-%d')
         print(selected_user.id)
-        append_users([selected_user.screen_name, str(selected_user.id), today])
+        append_users([selected_user.screen_name, str(selected_user.id), today, '×'])
 
 #API認証
 api = create_api(os.getenv('API_KEY'), os.getenv(
@@ -121,10 +125,12 @@ if __name__ == '__main__':
     unfollow_ids = return_unfollow_ids()
     for unfollow_id in unfollow_ids:
         api.destroy_friendship(unfollow_id)
+        print(f'{unfollow_id}がフォローを返さないので、アンフォローします')
     
     #片思いの人の最新ツイートをいいねする
     for kataomoi_id in kataomoi_ids:
         top_tweet = api.user_timeline(id=kataomoi_id)[0]
+        print(f'{kataomoi_id}のトップツイート{top_tweet}にいいねします')
         favorite_tweet(top_tweet)
     
 
