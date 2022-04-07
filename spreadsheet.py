@@ -1,9 +1,11 @@
-import datetime
+import datetime, os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from dotenv import load_dotenv
+load_dotenv()
 
 # 設定
-json_file = 'clean-healer-340010-6cfdd61db08b.json'
+json_file = os.getenv('JSON_FILE')
 file_name = 'Twitter_Users'
 sheet_name1 = 'シート1'
 
@@ -14,7 +16,7 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name(
     json_file, scope)
 gc = gspread.authorize(credentials)
 sh = gc.open(file_name)
-SPREADSHEET_KEY = '11DCjNA_20zeGn3rSxIYCYFbAzllq2KxS_FutiLjWZWA'
+SPREADSHEET_KEY = os.getenv('SPREADSHEET_KEY')
 
 wb = gc.open_by_key(SPREADSHEET_KEY)
 ws = wb.sheet1
