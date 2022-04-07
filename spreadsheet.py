@@ -36,17 +36,24 @@ def check_am_i_followed():
     
     #○と×の列
     followed_or_not_list = ws.col_values(4)[1:]
-    for i , followed_or_not in enumerate(followed_or_not_list):
-        id_cell = int(ws.cell(i+2, 2).value)
+    id_list = ws.col_values(2)[1:]
+    delete_row_list = []
+    for i, (id_cell, followed_or_not) in enumerate(zip(id_list, followed_or_not_list)):
         if followed_or_not == '○':
-            print('○なのでpassします')
-            pass
+            print('○なので削除します')
+            delete_row_list.append(i+2)
         elif id_cell in follower_id:
-            print(f'両思いなので{id_cell}を○にする')
-            ws.update_cell(i+2, 4, "○")
+            print(f'両思いなので{id_cell}を削除します')
+            delete_row_list.append(i+2)
+            # ws.update_cell(i+2, 4, "○")
         else:
             print(f'片思いなので{id_cell}を×のままにする')
             # ws.update_cell(i+2, 4, "×")
+    print(delete_row_list)
+    #使い終わった行を削除
+    for i, delete_row in enumerate(delete_row_list):
+        delete_row = delete_row - i
+        ws.delete_rows(delete_row)
     return kataomoi_ids
 
 def return_unfollow_ids():
