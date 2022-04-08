@@ -3,6 +3,7 @@ import random
 import time
 import os
 import datetime
+import pandas as pd
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -112,7 +113,7 @@ follower_id = api.get_follower_ids()
 
 if __name__ == '__main__':
     from spreadsheet import append_users, judge_user_existence, check_am_i_followed, return_unfollow_ids
-
+    
     selected_tweets, selected_users = select_blog_starter(api)
     for selected_tweet in selected_tweets:
         favorite_tweet(selected_tweet)
@@ -124,15 +125,15 @@ if __name__ == '__main__':
     #フォロー返さない人へのフォローを外す
     unfollow_ids = return_unfollow_ids()
     for unfollow_id in unfollow_ids:
-        api.destroy_friendship(unfollow_id)
+        api.destroy_friendship(user_id=unfollow_id)
         print(f'{unfollow_id}がフォローを返さないので、アンフォローします')
     
     #片思いの人の最新ツイートをいいねする
     for kataomoi_id in kataomoi_ids:
-        top_tweet = api.user_timeline(id=kataomoi_id)[0]
-        print(f'{kataomoi_id}のトップツイート{top_tweet}にいいねします')
+        top_tweet = api.user_timeline(user_id=kataomoi_id)[0]
+        print(f'{kataomoi_id}のトップツイート{top_tweet.text}にいいねします')
         favorite_tweet(top_tweet)
     
 
 
-#今後はスプシからフォローを返さない人をリムーブする
+#一度アンフォローした人はもうフォローしない

@@ -1,6 +1,8 @@
 import datetime, os
 import gspread
+import pandas as pd
 from oauth2client.service_account import ServiceAccountCredentials
+from gspread_dataframe import set_with_dataframe
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -20,6 +22,7 @@ SPREADSHEET_KEY = os.getenv('SPREADSHEET_KEY')
 
 wb = gc.open_by_key(SPREADSHEET_KEY)
 ws = wb.sheet1
+df = pd.DataFrame(ws.get_all_values()[1:], columns=ws.get_all_values()[0])
 
 def append_users(users):
     ws.append_row(users)
@@ -49,7 +52,7 @@ def check_am_i_followed():
         else:
             print(f'片思いなので{id_cell}を×のままにする')
             # ws.update_cell(i+2, 4, "×")
-    print(delete_row_list)
+    print(f'右の行のユーザーをスプシから削除します:{delete_row_list}')
     #使い終わった行を削除
     for i, delete_row in enumerate(delete_row_list):
         delete_row = delete_row - i
@@ -57,18 +60,12 @@ def check_am_i_followed():
     return kataomoi_ids
 
 def return_unfollow_ids():
-    unfollow_ids = []
-    dt_now = datetime.datetime.now()
-    i = 0
-    while ws.cell(i+2, 3).value:
-        follow_date = datetime.datetime.strptime(ws.cell(i+2, 3).value, '%Y-%m-%d')
-        dt_delta = dt_now - follow_date
-        if dt_delta.days >= 2:
-            unfollow_ids.append(ws.cell(i+2,2).value)
-            #フォロー返さない人を消す
-            ws.delete_row(i+2)
-        i += 1
-    return unfollow_ids
-
-# check_am_i_followed()
-# return_unfollow_ids()
+    dt_now = pd.to_datetime(datetime.datetime.now())
+    df['フォロー日'] = pd.to_datetime(df['フォロー日'])
+    df_remain = df[(dt_now - df['フォロー日']) / datetime.timedelta(days=1) <= 2]
+    df_delete = df[(dt_now - df['フォロー日']) / datetime.timedelta(days=1) > 2]
+    df_delete = df_delete.iloc[:,1].to_list()
+    ws.clear()
+    set_with_dataframe(ws, df_remain, include_column_header=True)
+    print(df_delete)
+    return df_delete
