@@ -22,7 +22,7 @@ SPREADSHEET_KEY = os.getenv('SPREADSHEET_KEY')
 
 wb = gc.open_by_key(SPREADSHEET_KEY)
 ws = wb.sheet1
-df = pd.DataFrame(ws.get_all_values()[1:], columns=ws.get_all_values()[0])
+# df = pd.DataFrame(ws.get_all_values()[1:], columns=ws.get_all_values()[0])
 
 def append_users(users):
     ws.append_row(users)
@@ -60,6 +60,7 @@ def check_am_i_followed():
     return kataomoi_ids
 
 def return_unfollow_ids():
+    df = pd.DataFrame(ws.get_all_values()[1:], columns=ws.get_all_values()[0])
     dt_now = pd.to_datetime(datetime.datetime.now())
     df['フォロー日'] = pd.to_datetime(df['フォロー日'])
     df_remain = df[(dt_now - df['フォロー日']) / datetime.timedelta(days=1) <= 2]
