@@ -58,17 +58,17 @@ def select_blog_starter(api):
             ff_ratio = 0
             print('ff比が算出できませんでした')
         #ツイートのいいねの数
-        if tweet.favorite_count >= 5:
+        if tweet.favorite_count >= 4:
             print('-----------------')    
             print('ツイートについているいいねが多い')
             continue
         #ff比
-        if ff_ratio <= 0.8 or ff_ratio >= 2:
+        if ff_ratio <= 0.85 or ff_ratio >= 2:
             print('-----------------')
             print('フォローを返さない人')
             continue
         #フォロワー数
-        if followers >= 400:
+        if followers >= 350:
             print('-----------------')
             print('フォロワーが多すぎる')
             continue
