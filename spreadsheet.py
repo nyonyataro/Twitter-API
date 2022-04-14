@@ -81,5 +81,3 @@ def return_unfollow_ids():
     set_with_dataframe(ws, df_remain, include_column_header=True)
     print(df_delete)
     return df_delete
-
-check_am_i_followed()
