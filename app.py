@@ -88,14 +88,14 @@ def select_blog_starter(api):
             selected_users.append(user)
     return selected_tweets, selected_users
 
-def favorite_tweet(tweet):
+def favorite_tweet(tweet) -> None:
     try:
         api.create_favorite(id=tweet.id)
         print('ツイートをいいねしました')
     except:
         print('既にいいね済みです')
 
-def follow_user(user):
+def follow_user(user) -> None:
     if judge_user_existence(user.screen_name):
         print(f'既に{user.screen_name}をフォロー済みです')
     else:
@@ -109,7 +109,8 @@ def follow_user(user):
 api = create_api(os.getenv('API_KEY'), os.getenv(
     'API_SECRET'), os.getenv('ACCESS_TOKEN'), os.getenv('ACCESS_SECRET'))
 
-follower_id = api.get_follower_ids()
+follower_id : list[str] =  api.get_follower_ids()
+follower_id = [str(n) for n in follower_id]
 
 if __name__ == '__main__':
     from spreadsheet import append_users, judge_user_existence, check_am_i_followed, return_unfollow_ids
