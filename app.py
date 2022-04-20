@@ -130,10 +130,10 @@ if __name__ == '__main__':
         print(f'{unfollow_id}がフォローを返さないので、アンフォローします')
     
     #片思いの人の最新ツイートをいいねする
-    for kataomoi_id in kataomoi_ids:
-        top_tweet = api.user_timeline(user_id=kataomoi_id)[0]
-        print(f'{kataomoi_id}のトップツイート{top_tweet.text}にいいねします')
-        favorite_tweet(top_tweet)
+    # for kataomoi_id in kataomoi_ids:
+    #     top_tweet = api.user_timeline(user_id=kataomoi_id)[0]
+    #     print(f'{kataomoi_id}のトップツイート{top_tweet.text}にいいねします')
+    #     favorite_tweet(top_tweet)
     
 
 
